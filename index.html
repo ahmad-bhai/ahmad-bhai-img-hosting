@@ -3,121 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ahmad Bhai - Secure Image Host</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Ahmad Bhai | Image Hosting</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --p: #6c5ce7; --bg: #0b0e14; }
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
-        body { background: var(--bg); color:white; height:100vh; display:flex; justify-content:center; align-items:center; }
-        
-        .card { 
-            width:90%; max-width:400px; background:rgba(255,255,255,0.03); 
-            backdrop-filter:blur(15px); border:1px solid rgba(255,255,255,0.1); 
-            padding:30px; border-radius:25px; text-align:center; box-shadow:0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        .icon-box { font-size:45px; color:var(--p); margin-bottom:15px; filter:drop-shadow(0 0 10px var(--p)); }
-        h2 { font-weight:600; margin-bottom:5px; font-size:22px; }
-        p.desc { color:#777; font-size:13px; margin-bottom:25px; }
-
-        .uploader { 
-            border:2px dashed rgba(108,92,231,0.3); border-radius:15px; padding:40px 10px;
-            cursor:pointer; transition:0.3s; position:relative; overflow:hidden;
-        }
-        .uploader:hover { border-color:var(--p); background:rgba(108,92,231,0.05); }
-        #preview { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; display:none; }
-
-        .btn { 
-            width:100%; background:var(--p); color:white; border:none; padding:15px; 
-            border-radius:12px; margin-top:20px; font-weight:600; cursor:pointer; transition:0.3s;
-        }
-        .btn:hover { opacity:0.9; transform:scale(0.98); }
-        .btn:disabled { background:#444; cursor:not-allowed; }
-
-        .res-box { margin-top:20px; display:none; animation:fadeIn 0.5s; }
-        .link-text { background:#161b22; padding:10px; border-radius:8px; font-size:12px; color:#a29bfe; word-break:break-all; margin-bottom:10px; }
-        
-        #toast { position:fixed; bottom:-60px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 25px; border-radius:50px; transition:0.4s; font-size:14px; }
-        #toast.active { bottom:30px; }
-        @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+        /* Aapka diya hua saara CSS yahan same rahega */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #0b0e14; background-image: radial-gradient(circle at 20% 30%, #1e222d 0%, #0b0e14 100%); height: 100vh; display: flex; justify-content: center; align-items: center; color: white; overflow: hidden; }
+        .dashboard { width: 90%; max-width: 450px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 30px; padding: 40px 25px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; }
+        .logo-area i { font-size: 50px; color: #6c5ce7; margin-bottom: 15px; filter: drop-shadow(0 0 10px #6c5ce7); }
+        h1 { font-size: 22px; font-weight: 600; margin-bottom: 5px; }
+        p.subtitle { font-size: 13px; color: #888; margin-bottom: 30px; }
+        .drop-zone { width: 100%; height: 180px; border: 2px dashed rgba(108, 92, 231, 0.3); border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; position: relative; overflow: hidden; }
+        .drop-zone:hover { border-color: #6c5ce7; background: rgba(108, 92, 231, 0.05); }
+        #preview-img { position: absolute; width: 100%; height: 100%; object-fit: cover; display: none; border-radius: 18px; }
+        .btn-upload { width: 100%; background: linear-gradient(90deg, #6c5ce7, #a29bfe); color: white; border: none; padding: 15px; border-radius: 15px; font-weight: 600; margin-top: 25px; cursor: pointer; box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3); transition: 0.3s; }
+        .btn-upload:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(108, 92, 231, 0.4); }
+        .btn-upload:disabled { opacity: 0.6; cursor: not-allowed; }
+        .result-area { margin-top: 25px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 15px; display: none; animation: slideIn 0.5s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .link-box { background: #161b22; padding: 10px; border-radius: 10px; font-size: 12px; color: #6c5ce7; word-break: break-all; margin-bottom: 10px; border: 1px solid #30363d; }
+        .copy-btn { background: #238636; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 13px; }
+        #toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 12px 25px; border-radius: 50px; font-size: 14px; transition: 0.5s; z-index: 1000; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        #toast.show { bottom: 30px; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <div class="icon-box"><i class="fa-solid fa-shield-halved"></i></div>
-    <h2>Ahmad Bhai Host</h2>
-    <p class="desc">Encrypted Backend Upload System</p>
-
-    <div class="uploader" onclick="document.getElementById('imgInp').click()">
-        <img id="preview">
-        <i class="fa-solid fa-cloud-arrow-up" style="font-size:30px; color:#444;"></i>
-        <p id="upText" style="font-size:12px; color:#666; margin-top:10px;">Click to select image</p>
+<div class="dashboard">
+    <div class="logo-area"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+    <h1>Ahmad Bhai Host</h1>
+    <p class="subtitle">Secure Cloud Storage Proxy</p>
+    <div class="drop-zone" onclick="document.getElementById('fileInput').click()">
+        <img id="preview-img" src="">
+        <i class="fa-solid fa-image" style="font-size: 30px; color: #444; margin-bottom: 10px;"></i>
+        <span id="dropText" style="font-size: 13px; color: #888;">Tap to select image</span>
     </div>
-
-    <input type="file" id="imgInp" accept="image/*" hidden>
-    <button class="btn" id="upBtn" onclick="upload()">🚀 Secure Upload</button>
-
-    <div class="res-box" id="resBox">
-        <div class="link-text" id="link"></div>
-        <button class="btn" style="background:#238636; margin-top:0;" onclick="copy()">📋 Copy Link</button>
+    <input type="file" id="fileInput" accept="image/*" hidden>
+    <button class="btn-upload" id="uploadBtn" onclick="startUpload()">
+        <i class="fa-solid fa-rocket"></i> &nbsp; Secure Upload
+    </button>
+    <div class="result-area" id="resultArea">
+        <div class="link-box" id="finalLink"></div>
+        <button class="copy-btn" onclick="copyToClipboard()"><i class="fa-solid fa-copy"></i> Copy Link</button>
     </div>
 </div>
 
 <div id="toast"></div>
 
 <script>
-    const imgInp = document.getElementById('imgInp');
-    const preview = document.getElementById('preview');
-    const upBtn = document.getElementById('upBtn');
-    const resBox = document.getElementById('resBox');
-    const link = document.getElementById('link');
+    // JavaScript Logic (Proxy Connect)
+    const fileInput = document.getElementById('fileInput');
+    const previewImg = document.getElementById('preview-img');
+    const dropText = document.getElementById('dropText');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const resultArea = document.getElementById('resultArea');
+    const finalLink = document.getElementById('finalLink');
+    const toast = document.getElementById('toast');
 
-    imgInp.onchange = () => {
-        const [file] = imgInp.files;
-        if(file){
-            preview.src = URL.createObjectURL(file);
-            preview.style.display = 'block';
+    fileInput.onchange = () => {
+        const file = fileInput.files[0];
+        if (file) {
+            previewImg.src = URL.createObjectURL(file);
+            previewImg.style.display = 'block';
+            dropText.style.display = 'none';
         }
     }
 
-    async function upload() {
-        const file = imgInp.files[0];
-        if(!file) return notify("Please select image!");
+    async function startUpload() {
+        const file = fileInput.files[0];
+        if (!file) return showToast("⚠️ Select an image!");
 
-        upBtn.disabled = true;
-        upBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Securing...';
+        uploadBtn.disabled = true;
+        uploadBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Securing...';
 
-        const fd = new FormData();
-        fd.append('image', file);
+        const formData = new FormData();
+        formData.append('image', file);
 
         try {
-            // 🔥 API Key backend mein hai, hum sirf endpoint call kar rahe hain
-            const res = await fetch('/api/upload', { method: 'POST', body: fd });
-            const data = await res.json();
+            // 🔥 Ab hum direct ImgBB nahi, apne backend /api/upload ko call kar rahe hain
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
 
-            if(data.success){
-                link.innerText = data.url;
-                resBox.style.display = 'block';
-                upBtn.innerHTML = '✅ Done';
-                notify("Hosted Successfully!");
+            const res = await response.json();
+
+            if (res.success) {
+                finalLink.innerText = res.data.url;
+                resultArea.style.display = 'block';
+                showToast("✅ Securely Uploaded!");
+                uploadBtn.innerHTML = '<i class="fa-solid fa-check"></i> Done';
             } else {
-                notify("Error: " + data.message);
-                reset();
+                showToast("❌ Error: " + res.message);
+                resetBtn();
             }
-        } catch(e) {
-            notify("Backend Error!");
-            reset();
+        } catch (e) {
+            showToast("❌ Backend Connection Failed!");
+            resetBtn();
         }
     }
 
-    function notify(m) {
-        const t = document.getElementById('toast');
-        t.innerText = m; t.classList.add('active');
-        setTimeout(()=> t.classList.remove('active'), 3000);
-    }
-    function reset() { upBtn.disabled = false; upBtn.innerHTML = '🚀 Secure Upload'; }
-    function copy() { navigator.clipboard.writeText(link.innerText); notify("Copied!"); }
+    function showToast(msg) { toast.innerText = msg; toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 3000); }
+    function resetBtn() { uploadBtn.disabled = false; uploadBtn.innerHTML = '<i class="fa-solid fa-rocket"></i> Secure Upload'; }
+    function copyToClipboard() { navigator.clipboard.writeText(finalLink.innerText); showToast("📋 Copied!"); }
 </script>
 </body>
 </html>

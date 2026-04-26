@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahmad Bhai - Secure Image Host</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --p: #6c5ce7; --bg: #0b0e14; }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+        body { background: var(--bg); color:white; height:100vh; display:flex; justify-content:center; align-items:center; }
+        
+        .card { 
+            width:90%; max-width:400px; background:rgba(255,255,255,0.03); 
+            backdrop-filter:blur(15px); border:1px solid rgba(255,255,255,0.1); 
+            padding:30px; border-radius:25px; text-align:center; box-shadow:0 20px 40px rgba(0,0,0,0.4);
+        }
+
+        .icon-box { font-size:45px; color:var(--p); margin-bottom:15px; filter:drop-shadow(0 0 10px var(--p)); }
+        h2 { font-weight:600; margin-bottom:5px; font-size:22px; }
+        p.desc { color:#777; font-size:13px; margin-bottom:25px; }
+
+        .uploader { 
+            border:2px dashed rgba(108,92,231,0.3); border-radius:15px; padding:40px 10px;
+            cursor:pointer; transition:0.3s; position:relative; overflow:hidden;
+        }
+        .uploader:hover { border-color:var(--p); background:rgba(108,92,231,0.05); }
+        #preview { position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; display:none; }
+
+        .btn { 
+            width:100%; background:var(--p); color:white; border:none; padding:15px; 
+            border-radius:12px; margin-top:20px; font-weight:600; cursor:pointer; transition:0.3s;
+        }
+        .btn:hover { opacity:0.9; transform:scale(0.98); }
+        .btn:disabled { background:#444; cursor:not-allowed; }
+
+        .res-box { margin-top:20px; display:none; animation:fadeIn 0.5s; }
+        .link-text { background:#161b22; padding:10px; border-radius:8px; font-size:12px; color:#a29bfe; word-break:break-all; margin-bottom:10px; }
+        
+        #toast { position:fixed; bottom:-60px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 25px; border-radius:50px; transition:0.4s; font-size:14px; }
+        #toast.active { bottom:30px; }
+        @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="icon-box"><i class="fa-solid fa-shield-halved"></i></div>
+    <h2>Ahmad Bhai Host</h2>
+    <p class="desc">Encrypted Backend Upload System</p>
+
+    <div class="uploader" onclick="document.getElementById('imgInp').click()">
+        <img id="preview">
+        <i class="fa-solid fa-cloud-arrow-up" style="font-size:30px; color:#444;"></i>
+        <p id="upText" style="font-size:12px; color:#666; margin-top:10px;">Click to select image</p>
+    </div>
+
+    <input type="file" id="imgInp" accept="image/*" hidden>
+    <button class="btn" id="upBtn" onclick="upload()">🚀 Secure Upload</button>
+
+    <div class="res-box" id="resBox">
+        <div class="link-text" id="link"></div>
+        <button class="btn" style="background:#238636; margin-top:0;" onclick="copy()">📋 Copy Link</button>
+    </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    const imgInp = document.getElementById('imgInp');
+    const preview = document.getElementById('preview');
+    const upBtn = document.getElementById('upBtn');
+    const resBox = document.getElementById('resBox');
+    const link = document.getElementById('link');
+
+    imgInp.onchange = () => {
+        const [file] = imgInp.files;
+        if(file){
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = 'block';
+        }
+    }
+
+    async function upload() {
+        const file = imgInp.files[0];
+        if(!file) return notify("Please select image!");
+
+        upBtn.disabled = true;
+        upBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Securing...';
+
+        const fd = new FormData();
+        fd.append('image', file);
+
+        try {
+            // 🔥 API Key backend mein hai, hum sirf endpoint call kar rahe hain
+            const res = await fetch('/api/upload', { method: 'POST', body: fd });
+            const data = await res.json();
+
+            if(data.success){
+                link.innerText = data.url;
+                resBox.style.display = 'block';
+                upBtn.innerHTML = '✅ Done';
+                notify("Hosted Successfully!");
+            } else {
+                notify("Error: " + data.message);
+                reset();
+            }
+        } catch(e) {
+            notify("Backend Error!");
+            reset();
+        }
+    }
+
+    function notify(m) {
+        const t = document.getElementById('toast');
+        t.innerText = m; t.classList.add('active');
+        setTimeout(()=> t.classList.remove('active'), 3000);
+    }
+    function reset() { upBtn.disabled = false; upBtn.innerHTML = '🚀 Secure Upload'; }
+    function copy() { navigator.clipboard.writeText(link.innerText); notify("Copied!"); }
+</script>
+</body>
+</html>

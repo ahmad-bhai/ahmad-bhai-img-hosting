@@ -38,7 +38,9 @@
         <i class="fa-solid fa-image" style="font-size: 30px; color: #444; margin-bottom: 10px;"></i>
         <span id="dropText" style="font-size: 13px; color: #888;">Tap to select image</span>
     </div>
-    <input type="file" id="fileInput" accept="image/*" hidden>
+    <!-- Is line ko update karein (Line 45) -->
+<input type="file" id="fileInput" accept="image/*" capture="environment" hidden>
+    
     <button class="btn-upload" id="uploadBtn" onclick="startUpload()">
         <i class="fa-solid fa-rocket"></i> &nbsp; Secure Upload
     </button>

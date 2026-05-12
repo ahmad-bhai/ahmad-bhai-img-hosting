@@ -38,9 +38,9 @@
         <i class="fa-solid fa-image" style="font-size: 30px; color: #444; margin-bottom: 10px;"></i>
         <span id="dropText" style="font-size: 13px; color: #888;">Tap to select image</span>
     </div>
-
-    <!-- Fix: Removed 'capture' and set 'accept' correctly to trigger the native menu -->
-    <input type="file" id="fileInput" accept="image/png, image/jpeg, image/gif, image/jpg" hidden>
+<!-- 'capture' hatane ke baad 'accept' ko yehi rakhein options ke liye -->
+<input type="file" id="fileInput" accept="image/*" hidden>
+    
     
     <button class="btn-upload" id="uploadBtn" onclick="startUpload()">
         <i class="fa-solid fa-rocket"></i> &nbsp; Secure Upload
